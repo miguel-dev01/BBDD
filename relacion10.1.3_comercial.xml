@@ -1,0 +1,385 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<relacionsql numrelacion="10.1">
+	<configdb>
+		<hostdb>localhost</hostdb>
+		<esquemadb>comercial</esquemadb>
+		<usuariodb>comercial</usuariodb>
+		<passdb>comercial</passdb>
+	</configdb>
+	<student>
+		<alumno>SANCHEZ GARCIA MIGUEL</alumno>
+		<finalgrade>0</finalgrade>
+		<totalgrade>0</totalgrade>
+		<maxgrade>0</maxgrade>
+	</student>
+	<consultas>
+		<query id="1" peso="1">
+			<descq>
+				Hallar todos los datos de los clientes mayores de 35 años a fecha de hoy. Ordénalos alfabéticamente por cliente.
+			</descq>
+			<resppropo>
+				select *
+				from cliente c
+				where datediff(now(), c.fecha_nac)/365 > 35
+				order by c.apellidos, c.nombre;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="2" peso="1">
+			<descq>
+				Hallar todos los datos de los clientes mayores de 35 años que residan en un distrito de código postal 30001. Ordénalos 						alfabéticamente por cliente
+			</descq>
+			<resppropo>
+				select *
+				from cliente c
+				where datediff(now(), c.fecha_nac)/365 > 35 and c.cod_postal = '30001'
+				order by c.apellidos, c.nombre;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="3" peso="1">
+			<descq>
+			Hallar el nº de clientes que residen en cada uno de los distritos (e.d que tengan mismo código postal). En la  salida indicar el ćodigo postal y el nº de clientes correspondiente como num_cli.
+			</descq>
+			<resppropo>
+				select cod_postal, count(*) as num_cli
+				from cliente c
+				group by c.cod_postal;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="4" peso="1">
+			<descq>
+				Hallar los diferentes códigos postales tanto de clientes como de comerciales. 
+				LLama al campo cod_postal y ordénalos por ese campo.
+			</descq>
+			<resppropo>
+				select distinct c.cod_postal as cod_postal
+				from cliente c inner join comercial c2
+				on c2.cod_postal = c.cod_postal
+				order by cod_postal;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="5" peso="1">
+			<descq>
+				Hallar la media de los stocks de artículos. (solo con dos decimales, redondeados) llama al campo media_stock
+			</descq>
+			<resppropo>
+				select round(avg(stock), 2) as media_stock from articulo;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="6" peso="1">
+			<descq>
+				Hallar la media del  precio unitario de los artículos que se hayan vendido en 2014 (que aparezcan en albaranes de 2014) (solo con dos decimales, redondeados) llama al campo media_precio. 
+			</descq>
+			<resppropo>
+				select round(avg(ar.precio), 2) as media_precio
+				from albaran al
+				inner join articulo ar on al.cod_art = ar.cod_art 
+				where year(al.fecha_alb) = 2014;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="7" peso="1">
+			<descq>
+				Hallar el código y descripción de aquellos artículos que están por encima del precio medio de todos los artículos, ordenalos por codigo.
+			</descq>
+			<resppropo>
+				select a.cod_art, a.descripcion
+				from articulo a
+				where a.precio > (
+				    select avg(a2.precio) from articulo a2) 
+				order by a.cod_art;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="8" peso="1">
+			<descq>Hallar el valor total actual del almacen. (lo que valen todos los artículos que tenemos en stock almacenados) llama al campo valor_total.		
+			</descq>
+			<resppropo>
+				select sum(a.precio * a.stock) as valor_total
+				from articulo a;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="9" peso="1">
+			<descq>Hallar el valor de la facturación total en 2012. llama al campo total_fact_2012</descq>
+			<resppropo>
+				select sum(f.importe) as total_fact_2012
+				from factura f 
+				where year(f.fecha_fac) = 2012;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="10" peso="1">
+			<descq>Hallar el valor de la facturación total en cada distrito (codigo_postal de cliente). Incluye en la salida el código postal y la facturación total para ese distrito como total_fact.</descq>
+			<resppropo>
+				select c.cod_postal, sum(f.importe) as total_fact
+				from cliente c inner join factura f 
+				on f.dni_cliente = c.dni 
+				group by c.cod_postal;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="11" peso="1">
+			<descq>
+				Hallar (en una solo consulta) el valor de la facturación total por cada año. Incluye en la salida el año como anyo y la facturaciṕon total como total_fact. Ordenalos por año.
+			</descq>
+			<resppropo>
+				select year(f.fecha_fac) as anyo, sum(f.importe) as total_fact
+				from factura f
+				group by year(f.fecha_fac);
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="12" peso="1">
+			<descq>
+				Hallar (para cada factura) el nº de albaranes que la componen. Incluye el cod_fact y el nº de albaranes en el resultado de la consulta como num_alba ordenalos por cod_fact.
+			</descq>
+			<resppropo>
+				select count(a.cod_alb) as cod_fact
+				from factura f inner join albaran a 
+				on a.cod_fact = f.cod_fac 
+				group by f.cod_fac
+				order by cod_fact;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+		<query id="13" peso="1">
+			<descq>
+				Hallar todos los datos de la/s factura/s de mayor importe. Ordénalos por codigo de factura.
+			</descq>
+			<resppropo>
+				select max(f.importe)
+				from factura f 
+				order by f.cod_fac;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+        <query id="14" peso="1">
+			<descq>
+                Hallar los cod_fact e importe de las facturas correspondientes a los tres mayores importes. Ordénalos por importe de mayor a menor y luego por cod_fact.
+			</descq>
+			<resppropo>
+			<![CDATA[
+				select f1.cod_fac, f1.importe 
+				from factura f1
+				where (select count(distinct importe)
+						from factura f2
+						where f2.importe > f1.importe) < 3
+				order by f1.importe desc, f1.cod_fac;
+			]]>
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+        <query id="15" peso="1">
+			<descq>
+                Hallar todos los datos de tres facturas de mayor importe. Ordénalos por importe de mayor a menor y luego por cod_fact.
+			</descq>
+			<resppropo>
+			<![CDATA[
+				select * 
+				from factura f1
+				where (select count(distinct importe)
+						from factura f2
+						where f2.importe > f1.importe) < 3
+				order by f1.importe desc, f1.cod_fac;
+			]]>
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+        <query id="16" peso="1">
+			<descq>
+                Hallar todos los datos de los artículos cuyo media de ventas para ese articulo (media del nº de unidades vendidas en cada albaran para ese artículo)  suponga 40% o más del stock actual para ese artículo. Ordénalos por código de artículo.
+			</descq>
+			<resppropo>
+				select *
+				from articulo a1 
+				where (select avg(a2.cantidad) from albaran a2 where a2.cod_art = a1.cod_art) > (0.4 * a1.stock)
+				order by a1.cod_art;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+        <query id="17" peso="1">
+			<descq>
+                Hallar todos los datos de los albaranes correspondientes a los tres mayores importes de albaranes. ordénalos por código de albaran.
+			</descq>
+			<resppropo>
+			<![CDATA[
+				select a.cod_alb, a.cod_fact, a.fecha_alb, a.cod_art, a.cantidad
+				from factura f1 inner join albaran a on a.cod_fact = f1.cod_fac 
+				where (select count(distinct importe)
+						from factura f2
+						where f2.importe > f1.importe) < 3
+				order by a.cod_alb;
+			]]>
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+        <query id="18" peso="1">
+			<descq>
+                Hallar, para cada cliente, el dni junto con su facturación total como total_fact.
+			</descq>
+			<resppropo>
+				select c.dni, sum(f.importe) as total_fact
+				from cliente c inner join factura f 
+				on f.dni_cliente = c.dni 
+				group by c.dni;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+        <query id="19" peso="1">
+			<descq>
+               		 Hallar todos los datos de comerciales que hayan visitado a todos los clientes. Ordénalos por código de comercial.
+			</descq>
+			<resppropo>
+				select *
+				from comercial
+				where dni in (
+				select vis.dni_comercial
+				from visita vis
+				where not exists (select *
+				from cliente cli
+				where not exists (select *
+				from visita visbis
+				where visbis.dni_comercial = vis.dni_comercial and
+				visbis.dni_cli = cli.dni)))
+				order by comercial.dni;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+        <query id="20" peso="1">
+			<descq>
+                Hallar todos los datos de albaranes de 2012 o 2014 pero que sus cantidades de articulos vendidos sea 10 o 30. Ordénalos por código de albaran. NO UTILICES BETWEEN.
+			</descq>
+			<resppropo>
+				select *
+				from albaran a 
+				where (year(a.fecha_alb) = '2012' or year(a.fecha_alb) = '2014') and 
+				(a.cantidad = 10 or a.cantidad = 30)
+				order by a.cod_alb;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+        <query id="21" peso="1">
+			<descq>
+                Hallar todos los datos de comerciales que han hecho visitas en 2012 o 2014 pero solo a clientes con codigo postal 30001 o 30009. Ordénalos por código de comercial. NO UTILICES BETWEEN.
+			</descq>
+			<resppropo>
+				select c.dni, c.nombre, c.apellidos, c.fecha_nac, c.direccion, c.cod_postal
+				from comercial c inner join visita v 
+				on v.dni_comercial = c.dni inner join cliente cl 
+				on cl.dni = v.dni_cli 
+				where c.dni in (
+				select vis.dni_comercial
+				from visita vis
+				where not exists (select *
+				from cliente cli
+				where not exists (select *
+				from visita visbis
+				where visbis.dni_comercial = vis.dni_comercial and
+				visbis.dni_cli = cli.dni))) and (year(v.fecha_visita) = 2012 or year(v.fecha_visita) = 2014) and
+				(cl.cod_postal = "30001" or cl.cod_postal = "30009")
+				order by c.dni;
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+        <query id="22" peso="1">
+			<descq>
+                Actualizar todos los stocks de articulos incrementado en un 20% aquellos artículos cuyo stock esté por debajo de 10 unidades. Utiliza redondeo a la alza para hallar el stock entero más próximo al cálculo realizado. 
+			</descq>
+			<resppropo>
+			<![CDATA[
+				update articulo
+				set stock = round(stock * 1.2, 0)
+				where stock < 10;
+			]]>
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+        <query id="23" peso="1">
+			<descq>
+                Actualizar todos los precios de articulos incrementado en un 8% aquellos artículos cuyo precio sea 250 o superior. Utiliza redondeo a la alza para hallar el precio entero más próximo al cálculo realizado. 
+			</descq>
+			<resppropo>
+			<![CDATA[
+				update articulo
+				set precio = round(precio * 1.08, 0)
+				where precio >= 250;
+			]]>
+			</resppropo>
+			<respcorr>
+			</respcorr>
+			<gradeq></gradeq>
+			<feedback></feedback>
+		</query>
+	</consultas> 
+</relacionsql>
