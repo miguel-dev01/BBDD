@@ -1,4 +1,4 @@
-# BBDD
+# BASES DE DATOS
 Repo sobre bases de datos relacionales y no relacionales
 
 Sobre esta primera rama, se ha trabajado con sentencias DDL y DML de SQL con el S.G.B.D MySQL.
