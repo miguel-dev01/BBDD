@@ -1,5 +1,4 @@
-# BASES DE DATOS
-Repo sobre bases de datos relacionales y no relacionales
+# PL/SQL
+Repositorio sobre el lenguaje procedural PLSQL de Oracle.
 
-Sobre esta primera rama, se ha trabajado con sentencias DDL y DML de SQL con el S.G.B.D MySQL.
-Se han realizado consultas, inserciones, borrado e importaciones de datos a la BD, así como a través de ficheros en formato CSV.
+Este repo contrendrá, prácticas, supuestos, ejercicios, y lógica de programación sobre un esquema de base de datos acerca de ventas, facturas, albaranes, comerciales...
